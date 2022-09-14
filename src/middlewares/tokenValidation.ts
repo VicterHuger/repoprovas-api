@@ -4,8 +4,8 @@ import { generateThrowErrorMessage } from '../utils/errorUtils';
 import jwt from 'jsonwebtoken'
 import * as authService from '../services/authService';
 
-interface ICustomPayload extends jwt.JwtPayload{
-    userId: string
+export interface ICustomPayload extends jwt.JwtPayload{
+    userId: number
 }
 
 export function tokenValidation(req:Request, res:Response, next:NextFunction){
@@ -27,9 +27,9 @@ export function tokenValidation(req:Request, res:Response, next:NextFunction){
         
         if(isNaN(Number(decoded.userId))) return res.status(401).send('Invalid token');
 
-        await authService.findUserById(Number(decoded.userId) );
+        await authService.findUserById((decoded.userId) );
 
-        res.locals.userId = Number(decoded.userId);
+        res.locals.userId = (decoded.userId);
 
         next();
     })
