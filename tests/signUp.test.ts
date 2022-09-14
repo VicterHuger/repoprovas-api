@@ -28,9 +28,11 @@ describe('Test route to sign up users', ()=>{
         password:'123456', confirmPassword:'123451'});
         expect(result.status).toBe(422);
     });
-    it('Test to verify if the route /sign-up send a status 201, if all body params are corrected inputeds and the email used was not sign up before', async()=>{
+    it('Test to verify if the route /sign-up send a status 201 and user was created on database, if all body params are corrected inputeds and the email used was not sign up before', async()=>{
         const result = await supertest(app).post('/sign-up').send({email:'victor@gmail.com', password:'123456', confirmPassword:'123456'});
+        const user = await prisma.user.findUnique({where:{email:'victor@gmail.com'}})
         expect(result.status).toBe(201);
+        expect(user).not.toBe(null);
     });
     it('Test to verify if the route /sign-up send a status 409, if all body params are corrected inputeds and the email used has already been sign up', async()=>{
         await supertest(app).post('/sign-up').send({email:'victor@gmail.com', password:'123456', confirmPassword:'123456'});

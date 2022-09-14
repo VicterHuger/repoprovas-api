@@ -8,7 +8,7 @@ import { TypeTestInsert, TypeTestSchema } from "../types/testType";
 import { generateThrowErrorMessage } from '../utils/errorUtils';
 
 export async function createTest(body:TypeTestSchema){
-   const { name, pdfUrl, category, discipline, teacher}:TypeTestSchema = body;
+   const { name, pdfUrl, category, discipline, teacher }:TypeTestSchema = body;
    const categoryDb:Category = await categoryService.findCategoryByName(category);
    if(!categoryDb) generateThrowErrorMessage("NotFound", "There is no category with the category name passed!");
    const disciplineDb:Discipline = await disciplineService.findDisciplineyByName(discipline);
