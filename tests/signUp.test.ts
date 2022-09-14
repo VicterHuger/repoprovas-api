@@ -3,7 +3,7 @@ import app from "../src/app";
 import prisma from "../src/config/databse";
 
 beforeEach(async()=>{
-    await prisma.$executeRaw`TRUNCATE TABLE users`;
+    await prisma.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY`;
 })
 
 describe('Test route to sign up users', ()=>{
@@ -40,6 +40,6 @@ describe('Test route to sign up users', ()=>{
 })
 
 afterAll(async()=>{
-    await prisma.$executeRaw`TRUNCATE TABLE users`;
+    await prisma.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY`;
     prisma.$disconnect;
 });

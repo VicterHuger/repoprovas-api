@@ -3,12 +3,11 @@ import app from "../src/app";
 import prisma from "../src/config/databse";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
-import {ICustomPayload} from '../src/middlewares/tokenValidation';
 
 dotenv.config();
 
 beforeEach(async()=>{
-    await prisma.$executeRaw`TRUNCATE TABLE users`;
+    await prisma.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY`;
 })
 
 describe('Test to sing-in an user',()=>{
