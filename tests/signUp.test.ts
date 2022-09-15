@@ -88,7 +88,7 @@ describe('POST /sign-up', ()=>{
     it('should return 201 and should sign up user on database if a correct body is supplyied', async()=>{
         const insertUser = userSignUpFactory();
         const result = await supertest(app).post('/sign-up').send(insertUser);
-        const user = await prisma.user.findUnique({where:{email:insertUser.email}})
+        const user = await prisma.user.findUnique({where:{email:insertUser.email}});
         expect(result.status).toBe(201);
         expect(user).not.toBe(null);
     });

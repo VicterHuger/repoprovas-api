@@ -54,7 +54,7 @@ describe('POST /sign-in',()=>{
         });
         expect(result.status).toBe(422);
     });
-    
+
     it('should return 422 if the password supplyied is not string type and all others body properties are correct', async()=>{
         const result = await supertest(app).post('/sign-up').send({
             email:faker.internet.email(), 
@@ -79,25 +79,31 @@ describe('POST /sign-in',()=>{
     });
 
     it('should return with status 200 and a valid token for the user, if the all the required body properties are correct and the user has previously sign-up', async()=>{
+
         const userSignUp = userSignUpFactory();
+
         await supertest(app).post('/sign-up').send(userSignUp);
 
         const user = await prisma.user.findUnique({where:{email: userSignUp.email}});
         
         const result = await supertest(app).post('/sign-in').send({email:userSignUp.email, password:userSignUp.password});
 
-        const {userId}=jwt.verify(<string>result.body.token, process.env.TOKEN_SECRET_KEY) as {userId:number}
+        const {userId}= jwt.verify(result.body.token, process.env.TOKEN_SECRET_KEY) as {userId:number};
 
         expect(result.status).toBe(200);
         expect(typeof result.body.token).toBe('string');
         expect(result.body.token).not.toBe(null);
-        expect(user.id).toBe(userId)
+        expect(user.id).toBe(userId);
 
     });
 
 });
 
+afterEach(async()=>{
+    await prisma.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY`;
+})
+
 afterAll(async()=>{
-    await prisma.$executeRaw`TRUNCATE TABLE users`;
+    await prisma.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY`;
     await prisma.$disconnect();
 })

@@ -1,4 +1,4 @@
-import pkg, { Prisma }  from '@prisma/client';
+import pkg from '@prisma/client';
 
 import { dbInitialFactory } from './factories/dbInitialDataFactory';
 
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 
 async function main(){
     const queriesSql:string[] = dbInitialFactory();
-    queriesSql.map(async(sql)=>{
+    queriesSql.forEach(async(sql)=>{
         await prisma.$executeRawUnsafe(sql);
     });
 }

@@ -16,9 +16,10 @@ export async function createUser(email:string, password:string){
 
 export async function singInUser(email:string, password:string){
     const user:User|null = await authRepository.findUserByEmail(email);
+
     if(user===null || email!==user.email) generateThrowErrorMessage("Unauthorized", "Email or password invalid!");
 
-    if(!bcrypt.compareSync(password,user.password)) generateThrowErrorMessage("Unauthorized","Email or password invalid");
+    if(!bcrypt.compareSync(password, user.password)) generateThrowErrorMessage("Unauthorized","Email or password invalid!");
 
     const token:string = jwt.sign({userId: user.id}, process.env.TOKEN_SECRET_KEY, {expiresIn:process.env.TOKEN_EXPIRES_IN});
     

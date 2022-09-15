@@ -9,10 +9,9 @@ import jwt from 'jsonwebtoken';
 
 dotenv.config();
 
-
-
-beforeAll(async()=>{
+beforeEach(async()=>{
     await prisma.$executeRaw`TRUNCATE TABLE tests RESTART IDENTITY`;
+    await prisma.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY`;
 });
 
 describe('POST /texts/create',()=>{
@@ -191,22 +190,21 @@ describe('POST /texts/create',()=>{
         expect(result.status).toBe(401);    
     });
 
-    // it('should return 401 if the requisition with headers Authorization presents the word Bearer followed by a token that is expired', async()=>{
-    //     const token:string = jwt.sign({userId:1}, process.env.TOKEN_SECRET_KEY, {expiresIn:1})
+    it('should return 401 if the requisition with headers Authorization presents the word Bearer followed by a token that is expired', async()=>{
+        const token:string = jwt.sign({userId:1}, process.env.TOKEN_SECRET_KEY, {expiresIn:1})
         
-    //     const result = await supertest(app).post('/tests/create').set({'Authorization': `Bearer ${token}`}).send(testFactory());
+        const result = await supertest(app).post('/tests/create').set({'Authorization': `Bearer ${token}`}).send(testFactory());
         
-    //     expect(result.status).toBe(401);    
-    // });
+        expect(result.status).toBe(401);    
+    });
 
-    // it('should return 401 if the requisition with headers Authorization presents the word Bearer followed by a token that there is not relation with a sign up user', async()=>{
-    //     const token:string = jwt.sign({userId:1}, process.env.TOKEN_SECRET_KEY, {expiresIn:process.env.TOKEN_EXPIRES_IN})
+    it('should return 401 if the requisition with headers Authorization presents the word Bearer followed by a token that there is not relation with a sign up user', async()=>{
+        const token:string = jwt.sign({userId:1}, process.env.TOKEN_SECRET_KEY, {expiresIn:process.env.TOKEN_EXPIRES_IN})
         
-    //     const result = await supertest(app).post('/tests/create').set({'Authorization': `Bearer ${token}`}).send(testFactory());
+        const result = await supertest(app).post('/tests/create').set({'Authorization': `Bearer ${token}`}).send(testFactory());
         
-    //     expect(result.status).toBe(401);    
-    // });
-    
+        expect(result.status).toBe(401);    
+    });
 
     it('should return 404 if the requisition with a valid token sent a not sign up category on database', async()=>{
         const userSignUp = userSignUpFactory();
@@ -222,12 +220,10 @@ describe('POST /texts/create',()=>{
         expect(result.status).toBe(404);
     });
 
+})
 
-    
-
-
-
-    
-
-
+afterAll(async()=>{
+    await prisma.$executeRaw`TRUNCATE TABLE tests RESTART IDENTITY`;
+    await prisma.$executeRaw`TRUNCATE TABLE users RESTART IDENTITY`;
+    await prisma.$disconnect();
 })
