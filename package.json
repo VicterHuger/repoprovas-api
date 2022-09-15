@@ -7,13 +7,16 @@
     "build": "tsc && npx prisma generate && npx prisma migrate deploy",
     "start": "node dist/server.js",
     "dev": "nodemon src/server.ts",
-    "test": "jest -i --no-cache"
+    "test": "dotenv -e .env.test prisma migrate dev && dotenv -e .env.test prisma db seed && dotenv -e .env.test jest -i --no-cache"
   },
   "keywords": [
     "Tests",
     "Categories",
     "Disciplines"
   ],
+  "prisma":{
+    "seed": "ts-node prisma/seed.ts" 
+  },
   "author": "Victor Hugo Borges Simões",
   "license": "ISC",
   "dependencies": {
@@ -21,6 +24,7 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.2",
+    "dotenv-cli": "^6.0.0",
     "express": "^4.18.1",
     "express-async-errors": "^3.1.1",
     "joi": "^17.6.0",
@@ -29,6 +33,7 @@
     "string-strip-html": "^8.3.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^7.5.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",

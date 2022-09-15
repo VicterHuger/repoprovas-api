@@ -10,13 +10,14 @@ export interface ICustomPayload extends jwt.JwtPayload{
 
 export function tokenValidation(req:Request, res:Response, next:NextFunction){
     const {authorization} : {authorization?:string} = req.headers;
-    if(!authorization) return res.status(400).send("Headers authorization is missing!");
+    
+    if(!authorization) return res.status(401).send("Headers authorization is missing!");
 
     const sanitizedHeaders:string = stripHtml(authorization).result.trim();
 
     const token:string|void = sanitizedHeaders?.replace("Bearer ", "") ?? generateThrowErrorMessage("Unauthorized", "Invalid token");
 
-    if(!token || token===sanitizedHeaders) generateThrowErrorMessage("Unauthorized", "Invalid token");
+    if(!token || token===sanitizedHeaders) return res.status(401).send('Invalid token');
 
     jwt.verify(<string>token, process.env.TOKEN_SECRET_KEY, async (err:jwt.VerifyErrors, decoded:ICustomPayload)=>{
         
@@ -32,6 +33,6 @@ export function tokenValidation(req:Request, res:Response, next:NextFunction){
         res.locals.userId = (decoded.userId);
 
         next();
-    })
+    });
     
 }
