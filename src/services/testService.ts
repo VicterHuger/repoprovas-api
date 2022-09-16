@@ -22,7 +22,7 @@ export async function createTest(body:TypeTestSchema){
    if(existingTest) generateThrowErrorMessage("Conflict","This test was already created");
    const test:Test = await testRepository.createTest(testInsertObject);
    if(!test) generateThrowErrorMessage("InternalServerError", "Something went wrong and the test could not be created!");
-   return;
+   return test;
 }
 
 function createTestObject(name:string, pdfUrl:string, categoryId:number, teacherDisciplineId:number):TypeTestInsert{
