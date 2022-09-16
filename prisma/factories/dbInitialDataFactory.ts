@@ -1,5 +1,7 @@
-export function dbInitialFactory(){
-    return [
+import prisma from "../../src/config/databse";
+
+export async function dbInitialFactory(){
+    const sqlQueries = [
     `INSERT INTO terms ("number") VALUES (1) ON CONFLICT DO NOTHING;`,
     `INSERT INTO terms ("number") VALUES (2) ON CONFLICT DO NOTHING;`,
     `INSERT INTO terms ("number") VALUES (3) ON CONFLICT DO NOTHING;`,
@@ -31,4 +33,9 @@ export function dbInitialFactory(){
     `INSERT INTO "teachersDisciplines" ("teacherId", "disciplineId") VALUES (2, 4) ON CONFLICT DO NOTHING;`,
     `INSERT INTO "teachersDisciplines" ("teacherId", "disciplineId") VALUES (2, 5) ON CONFLICT DO NOTHING;`,
     `INSERT INTO "teachersDisciplines" ("teacherId", "disciplineId") VALUES (2, 6) ON CONFLICT DO NOTHING;`];
+
+    sqlQueries.forEach(async(sql)=>{
+        await prisma.$executeRawUnsafe(sql);
+    });
+    return ;
 }

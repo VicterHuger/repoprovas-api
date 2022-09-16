@@ -7,10 +7,7 @@ const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 
 async function main(){
-    const queriesSql:string[] = dbInitialFactory();
-    queriesSql.forEach(async(sql)=>{
-        await prisma.$executeRawUnsafe(sql);
-    });
+  return await dbInitialFactory();
 }
 
 main().catch(err=>{
