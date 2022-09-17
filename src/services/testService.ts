@@ -25,3 +25,8 @@ export async function createTest(body:TypeTestSchema){
    if(!test) generateThrowErrorMessage("InternalServerError", "Something went wrong and the test could not be created!");
    return test;
 }
+
+export async function listTestsPerDiscipline(){
+    const tests = await testRepository.findTestsPerDiscipline();
+    return {terms:tests};
+}

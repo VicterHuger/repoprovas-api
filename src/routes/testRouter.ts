@@ -8,6 +8,8 @@ import { TypeTestSchema } from "../types/testType";
 
 const router:Router = Router();
 
-router.post('/tests/create', validateSchema<TypeTestSchema>(testSchema), tokenValidation, testController.createTest)
+router.post('/tests/create', validateSchema<TypeTestSchema>(testSchema), tokenValidation, testController.createTest);
+
+router.get('/tests/disciplines', tokenValidation, testController.listTestsPerDiscipline )
 
 export default router;
