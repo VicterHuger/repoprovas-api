@@ -12,3 +12,8 @@ export async function listTestsPerDiscipline(_req:Request, res:Response){
     const tests = await testService.listTestsPerDiscipline();
     return res.status(200).send(tests);
 }
+
+export async function listTestsPerTeacher(_req:Request, res:Response){
+    const tests = await testService.listTestsPerTeacher();
+    return res.status(200).send(tests);
+}

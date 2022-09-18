@@ -7,6 +7,7 @@ import { Category, Discipline, Teacher, TeacherDiscipline, Test } from "@prisma/
 import { TypeTestSchema } from "../types/testType";
 import { generateThrowErrorMessage } from '../utils/errorUtils';
 import { testObjectCreationFactory } from '../../prisma/factories/testFactory';
+import { testFactory } from '../../prisma/factories/testFactory';
 
 export async function createTest(body:TypeTestSchema){
    const { name, pdfUrl, category, discipline, teacher }:TypeTestSchema = body;
@@ -29,4 +30,9 @@ export async function createTest(body:TypeTestSchema){
 export async function listTestsPerDiscipline(){
     const tests = await testRepository.findTestsPerDiscipline();
     return {terms:tests};
+}
+
+export async function listTestsPerTeacher(){
+    const tests = await testRepository.findTestsPerTeacher();
+    return {teachers:tests};
 }

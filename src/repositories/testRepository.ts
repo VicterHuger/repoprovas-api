@@ -47,12 +47,53 @@ export async function findTestsPerDiscipline(){
                                 
                             }
                         },
-                        
-                        
                     }
                 }
             }
         }
     });
+}
 
+export async function findTestsPerTeacher(){
+    return await prisma.teacher.findMany({
+        select:{
+            id:true,
+            name:true,
+            teacherDisciplines:{
+                select:{
+                    discipline:{
+                        select:{
+                            id:true,
+                            name:true,
+                            teacherDisciplines:{
+                                distinct:['disciplineId', 'teacherId'],
+                                select:{
+                                    id:true,
+                                    tests:{
+                                        distinct:['teacherDisciplineId'],
+                                        select:{
+                                            category:{
+                                                select:{
+                                                    id:true,
+                                                    name:true,
+                                                    tests:{
+                                                        select:{
+                                                            id:true,
+                                                            name:true,
+                                                            pdfUrl:true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                
+                            }
+                        }
+                    },
+                }
+            }
+        }
+    });
 }
