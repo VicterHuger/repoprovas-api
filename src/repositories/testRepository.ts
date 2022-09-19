@@ -19,32 +19,27 @@ export async function findTestsPerDiscipline(){
                     id:true,
                     name:true,
                     teacherDisciplines:{
+                        distinct:['id'],
                         select:{
+                            id:true,
                             teacher:{
                                 select:{
                                     id:true,
                                     name:true,
                                 }
-                            }, 
+                            },
                             tests:{
-                                distinct:['categoryId'],
                                 select:{
+                                    id:true,
+                                    name:true,
+                                    pdfUrl:true,
                                     category:{
-                                        select :{
+                                        select:{
                                             id:true,
-                                            name:true,
-                                            tests:{
-                                                select:{
-                                                    id:true,
-                                                    name:true,
-                                                    pdfUrl:true
-                                                }
-                                            }
-                                        
+                                            name:true
                                         }
                                     }
-                                },                       
-                                
+                                }
                             }
                         },
                     }
@@ -72,28 +67,46 @@ export async function findTestsPerTeacher(){
                                     tests:{
                                         distinct:['teacherDisciplineId'],
                                         select:{
+                                            id:true,
+                                            name:true,
+                                            pdfUrl:true,
+                                            teacherDisciplineId:true,
                                             category:{
                                                 select:{
                                                     id:true,
-                                                    name:true,
-                                                    tests:{
-                                                        select:{
-                                                            id:true,
-                                                            name:true,
-                                                            pdfUrl:true
-                                                        }
-                                                    }
+                                                    name:true
                                                 }
                                             }
                                         }
                                     }
                                 }
-                                
                             }
+                            
                         }
-                    },
-                }
+                    }
+                },
             }
         }
     });
 }
+
+// tests :{
+//     distinct:['categoryId'],
+//     select:{
+//         category:{
+//             select :{
+//                 id:true,
+//                 name:true,
+//                 tests:{
+//                     select:{
+//                         id:true,
+//                         name:true,
+//                         pdfUrl:true
+//                     }
+//                 }
+            
+//             }
+//         }
+//     },                       
+    
+// }
