@@ -4,7 +4,8 @@ import * as teacherService from '../services/teacherService';
 import * as teacherDisciplineService from '../services/teacherDisciplineService';
 import * as testRepository from '../repositories/testRepository';
 import { Category, Discipline, Teacher, TeacherDiscipline, Test } from "@prisma/client";
-import { TypeTestSchema, TypeTestOfListDiscipline } from "../types/testType";
+import { TypeTestSchema, TypeTestOfListDiscipline, TypeTestsPerTerms } from "../types/testType";
+import { IHashTableCategory } from "../types/categoryType";
 import { generateThrowErrorMessage } from '../utils/errorUtils';
 import { testObjectCreationFactory } from '../../prisma/factories/testFactory';
 
@@ -27,34 +28,36 @@ export async function createTest(body:TypeTestSchema){
 }
 
 export async function listTestsPerDiscipline(){
-    const rawTests = await testRepository.findTestsPerDiscipline();    
+    const rawTests:TypeTestsPerTerms[] = await testRepository.findTestsPerDiscipline();    
 
-    // for(const term of rawTests){
-    //     for(const discipline of term.disciplines){
-    //         for(const teacherDiscipline of discipline.teacherDisciplines){
-    //             if(teacherDiscipline.tests.length ===0) break;
-    //             const teacher = teacherDiscipline.teacher;
-    //             delete teacherDiscipline.teacher;
-    //             const hashtableCategory:{id?:number, name?:string, pdfUrl?:string, category?:object, teacher?:object}= {};
-    //             for(const test of teacherDiscipline.tests){
-    //                 const newTest:TypeTestOfListDiscipline = {...test}
-    //                 newTest.teacher = teacher;
-    //                 if(hashtableCategory[newTest.category.name]===undefined) {
-    //                     hashtableCategory[newTest.category.name] = new Array(newTest);
-    //                     continue;
-    //                 }
-    //                 hashtableCategory[test.category.name].push(newTest);
-    //             }
-    //             console.log(hashtableCategory)
-    //             delete teacherDiscipline.tests;
-    //             for(let i=0; i<Object.values(hashtableCategory).length; i++){
-    //                 delete teacherDiscipline.tests;
-    //                 teacherDiscipline.tests.push(Object.values(hashtableCategory)[i])
-    //             }
+    for(const term of rawTests){
+        for(const discipline of term.disciplines){
+            for(const teacherDiscipline of discipline.teacherDisciplines){
+               
+                if(teacherDiscipline.tests.length ===0) break;
 
-    //         }
-    //     }
-    // }
+                const teacher = teacherDiscipline.teacher;
+                delete teacherDiscipline.teacher;
+
+              const hashtableCategory:IHashTableCategory<TypeTestOfListDiscipline>={};
+
+                for(const test of teacherDiscipline.tests){
+                    const newTest:TypeTestOfListDiscipline = {...test}
+                    newTest.teacher = teacher;
+                    if(!hashtableCategory[newTest.category.name]) {
+                        hashtableCategory[newTest.category.name] = [newTest];
+                        continue;
+                    }
+                    hashtableCategory[test.category.name].push(newTest);
+                }
+
+                delete teacherDiscipline.tests;
+               
+                teacherDiscipline.categories = hashtableCategory;
+
+            }
+        }
+    }
 
     return {terms:rawTests};
 }

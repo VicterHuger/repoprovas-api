@@ -399,28 +399,33 @@ describe('GET /tests/disciplines', ()=>{
         const result = await supertest(app).get('/tests/disciplines').set({'Authorization':`Bearer ${loginResult.body.token}`});
 
         expect (result.status).toBe(200);
-        // expect(result.body).toMatchObject(expect.objectContaining({
-        //     terms: expect.any(Array)
-        // }));
 
-        // expect(result.body.terms[1].disciplines[0]).toMatchObject(expect.objectContaining({
-        //     id: expect.any(Number),
-        //     name: expect.any(String),
-        //     teacherDisciplines: expect.any(Array)
-        // }));
-        // expect(result.body.terms[1].disciplines[0].teacherDisciplines[0]).toMatchObject(expect.objectContaining({
-        //     teacher: expect.any(Object),
-        //     tests: expect.any(Array),
-        // }));
-        // expect(result.body.terms[1].disciplines[0].teacherDisciplines[0].tests[0]).toMatchObject(expect.objectContaining({
-        //    category:expect.any(Object),
-        // }));
+        expect(result.body).toMatchObject(expect.objectContaining({
+            terms: expect.any(Array)
+        }));
 
-        // expect(result.body.terms[1].disciplines[0].teacherDisciplines[0].tests[0].category).toMatchObject(expect.objectContaining({
-        //     id: expect.any(Number),
-        //     name: expect.any(String),
-        //     tests: expect.any(Array),
-        // }));
+        expect(result.body.terms[1].disciplines[0]).toMatchObject(expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+            teacherDisciplines: expect.any(Array)
+        }));
+
+
+        expect(result.body.terms[1].disciplines[0].teacherDisciplines[0]).toMatchObject(expect.objectContaining({
+            categories: expect.any(Object),
+        }));
+
+        expect(result.body.terms[1].disciplines[0].teacherDisciplines[0].categories).toMatchObject(expect.objectContaining({
+           Projeto:expect.any(Array),
+        }));
+
+        expect(result.body.terms[1].disciplines[0].teacherDisciplines[0].categories.Projeto[0]).toMatchObject(expect.objectContaining({
+            id: expect.any(Number),
+            name: expect.any(String),
+            pdfUrl: expect.any(String),
+            category: expect.any(Object),
+            teacher: expect.any(Object)
+        }));
 
 
     });

@@ -21,7 +21,6 @@ export async function findTestsPerDiscipline(){
                     teacherDisciplines:{
                         distinct:['id'],
                         select:{
-                            id:true,
                             teacher:{
                                 select:{
                                     id:true,
@@ -36,7 +35,7 @@ export async function findTestsPerDiscipline(){
                                     category:{
                                         select:{
                                             id:true,
-                                            name:true
+                                            name:true,
                                         }
                                     }
                                 }
