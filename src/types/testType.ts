@@ -52,7 +52,6 @@ export type TypeTestsPerTerms={
                 name: string;
                 id: number;
             };
-            id: number;
             tests?: {
                 name: string;
                 pdfUrl: string;
