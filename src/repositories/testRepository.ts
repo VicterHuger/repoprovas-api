@@ -30,12 +30,12 @@ export async function findTestsPerDiscipline(){
                             tests:{
                                 select:{
                                     id:true,
-                                    name:true,
-                                    pdfUrl:true,
-                                    category:{
-                                        select:{
-                                            id:true,
-                                            name:true,
+                                    name: true,
+                                    pdfUrl: true,
+                                    category: {
+                                        select: {
+                                            id: true,
+                                            name: true,
                                         }
                                     }
                                 }
@@ -54,36 +54,29 @@ export async function findTestsPerTeacher(){
             id:true,
             name:true,
             teacherDisciplines:{
+                distinct:['id'],
                 select:{
                     discipline:{
                         select:{
                             id:true,
                             name:true,
-                            teacherDisciplines:{
-                                distinct:['disciplineId', 'teacherId'],
-                                select:{
-                                    id:true,
-                                    tests:{
-                                        distinct:['teacherDisciplineId'],
-                                        select:{
-                                            id:true,
-                                            name:true,
-                                            pdfUrl:true,
-                                            teacherDisciplineId:true,
-                                            category:{
-                                                select:{
-                                                    id:true,
-                                                    name:true
-                                                }
-                                            }
-                                        }
-                                    }
+                        },
+                    },
+                    tests: {
+                        select: {
+                            id: true,
+                            name: true,
+                            pdfUrl: true,
+                            category: {
+                                select: {
+                                    id: true,
+                                    name: true
                                 }
                             }
-                            
                         }
                     }
                 },
+                                
             }
         }
     });
